@@ -776,7 +776,7 @@
   "sourceMap": "60:526:0:-:0;;;158:51;;;;;;;;;-1:-1:-1;183:5:0;:18;;-1:-1:-1;;;;;;183:18:0;191:10;183:18;;;60:526;;;;;;",
   "deployedSourceMap": "60:526:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;418:163;;;;;;:::i;:::-;;:::i;:::-;;113:36;;;;;;;;;474:25:2;;;462:2;447:18;113:36:0;;;;;;;;86:20;;;;;;;;;;;;686:42:2;674:55;;;656:74;;644:2;629:18;86:20:0;510:226:2;300:110:0;;;;;;:::i;:::-;;:::i;418:163::-;266:5;;;;252:10;:19;249:25;;552:24:::1;::::0;531:46:::1;::::0;;;;512:11;;531:20:::1;::::0;::::1;::::0;::::1;::::0;:46:::1;::::0;::::1;;474:25:2::0;;;462:2;447:18;;328:177;531:46:0::1;;;;;;;;;;;;;;;;;;::::0;::::1;;;;;;;;;;;;::::0;::::1;;;;;;;;;473:108;249:25:::0;418:163;:::o;300:110::-;266:5;;;;252:10;:19;249:25;;366:24:::1;:36:::0;300:110::o;14:309:2:-;73:6;126:2;114:9;105:7;101:23;97:32;94:52;;;142:1;139;132:12;94:52;181:9;168:23;231:42;224:5;220:54;213:5;210:65;200:93;;289:1;286;279:12;200:93;312:5;14:309;-1:-1:-1;;;14:309:2:o;741:180::-;800:6;853:2;841:9;832:7;828:23;824:32;821:52;;;869:1;866;859:12;821:52;-1:-1:-1;892:23:2;;741:180;-1:-1:-1;741:180:2:o",
   "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ncontract Migrations{\r\n    address public owner;\r\n    uint public last_completed_migration;\r\n\r\n    constructor() {\r\n        owner = msg.sender;\r\n    }\r\n\r\n    modifier restricted(){\r\n        if(msg.sender == owner) _;//continue\r\n    }\r\n\r\n    function setCompleted(uint completed) public restricted{\r\n        last_completed_migration = completed;\r\n    }\r\n\r\n    function update(address new_address) public restricted {\r\n    Migrations updated = Migrations(new_address);\r\n    updated.setCompleted(last_completed_migration);\r\n}\r\n\r\n}",
-  "sourcePath": "C:\\Users\\Shai\\Desktop\\Pollster\\contracts\\Migrations.sol",
+  "sourcePath": "C:\\Users\\inonl\\OneDrive\\שולחן העבודה\\shimi dieded on the window\\Pollster\\contracts\\Migrations.sol",
   "ast": {
     "absolutePath": "project:/contracts/Migrations.sol",
     "exportedSymbols": {
@@ -1436,12 +1436,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xb21ceF29524bA7520522eCDf0Fb52474DE8C4481",
-      "transactionHash": "0x519e29154b20c57d53ef40883088a962baacf0bb7b17805b61f11586cf179ac3"
+      "address": "0x809D5cD25F79f03130de2DB37909579E2538500b",
+      "transactionHash": "0xa3fdbbbbfd4ccae231c2b0d0690355347429a1ef7049c987cab13c021ef7d682"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-04-25T09:34:07.071Z",
+  "updatedAt": "2024-04-26T15:06:05.432Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
