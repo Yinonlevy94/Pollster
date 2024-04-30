@@ -1,0 +1,31 @@
+.vote-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+.candidate {
+    flex-basis: 30%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    border: none;
+    background: white;
+}
+
+.candidate:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.candidate img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+

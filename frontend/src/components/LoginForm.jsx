@@ -1,25 +1,39 @@
 import React, { useState } from 'react';
-import './LoginForm.css'; 
+import './LoginForm.css';
 import { FaUser } from "react-icons/fa";
 import { MdOutlinePassword } from "react-icons/md";
-import axios from 'axios'; 
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; 
 
 function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate(); 
 
     const handleLogin = async (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
         try {
             const response = await axios.post("http://localhost:5000/api/", {
                 username: username,
                 password: password
             });
-            console.log(response.data); 
+    
+            if (response.status === 200 && response.data.redirectUrl) {
+                navigate(response.data.redirectUrl); 
+            } else {
+                console.log(response.data);
+            }
         } catch (e) {
-            console.log("error", e);
+            if (e.response && e.response.status === 404) {
+                setErrorMessage('User does not exist');
+            } else {
+                console.log("error", e);
+                setErrorMessage('An error occurred. Please try again.');
+            }
         }
     }
+    
 
     return (
         <div className='wrapper'>
@@ -45,7 +59,8 @@ function LoginForm() {
                     />
                     <MdOutlinePassword />
                 </div>
-                <button type="submit">Login</button> {/* Submit button added */}
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
+                <button type="submit">Login</button>
             </form>
         </div>
     );
