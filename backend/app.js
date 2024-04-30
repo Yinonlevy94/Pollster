@@ -26,7 +26,7 @@ mongoose.connect('mongodb+srv://shaiYinon:shaiYinon@pollster.rmi7ajf.mongodb.net
       });
   
       if (user) {
-        res.json({ redirectUrl: '/api/votepage' }); 
+        res.json({ redirectUrl: '/api/vote' }); 
       } else {
         res.status(404).json({ error: 'User does not exist' });
       }
