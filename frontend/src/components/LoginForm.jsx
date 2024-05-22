@@ -15,11 +15,12 @@ function LoginForm() {
     const handleLogin = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:5000/api/", {
+            console.log('Login details:', { username, password });
+            const response = await axios.post("http://localhost:5000/api", {
                 username: username,
                 password: password
             });
-
+    
             if (response.status === 200 && response.data.redirectUrl) {
                 navigate(response.data.redirectUrl);
             } else {
@@ -28,12 +29,15 @@ function LoginForm() {
         } catch (e) {
             if (e.response && e.response.status === 404) {
                 setErrorMessage('User does not exist');
+            } else if (e.response && e.response.status === 401) {
+                setErrorMessage('Invalid password');
             } else {
                 console.log("error", e);
                 setErrorMessage('An error occurred. Please try again.');
             }
         }
     };
+    
 
     const handleSignUp = async (event) => {
         event.preventDefault();
