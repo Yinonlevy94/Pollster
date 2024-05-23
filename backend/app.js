@@ -1,7 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { Web3 } = require('web3');
+const Web3 = require('web3');
+const Wallet = require('ethereumjs-wallet').default;
+const { default: hdkey } = require('ethereumjs-wallet/hdkey');
+const bip39 = require('bip39');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,49 +21,64 @@ mongoose.connect('mongodb+srv://shaiYinon:shaiYinon@pollster.rmi7ajf.mongodb.net
 // Correct initialization of Web3 with HTTP provider
 const web3 = new Web3('http://127.0.0.1:7545'); // Ensure Ganache is running on port 7545
 
+// Your mnemonic phrase from Ganache (replace this with your actual mnemonic phrase)
+const mnemonic = 'trend poverty aunt scissors traffic couple possible burst found excuse uphold bless';
+
+const hdwallet = hdkey.fromMasterSeed(bip39.mnemonicToSeedSync(mnemonic));
+const path = "m/44'/60'/0'/0/";
+
+// Keep track of assigned accounts
+let assignedAccounts = {};
+
+async function getAccountDetails(index) {
+  const wallet = hdwallet.derivePath(path + index).getWallet();
+  return {
+    address: '0x' + wallet.getAddress().toString('hex'),
+    privateKey: '0x' + wallet.getPrivateKey().toString('hex')
+  };
+}
+
 app.post('/api/register', async (req, res) => {
   try {
     const { username, password } = req.body;
 
     console.log('Registering user:', { username, password });
 
-    // Generate a new Ethereum account
-    const account = web3.eth.accounts.create();
-    const privateKey = account.privateKey;
-    const address = account.address;
+    // Get an existing account from Ganache that hasn't been used yet
+    const accounts = await web3.eth.getAccounts();
+    let accountToAssign, accountIndex;
 
-    console.log('Generated account:', { privateKey, address });
+    for (let i = 0; i < accounts.length; i++) {
+      if (!assignedAccounts[accounts[i]]) {
+        accountToAssign = accounts[i];
+        accountIndex = i;
+        assignedAccounts[accounts[i]] = true; // Mark this account as used
+        break;
+      }
+    }
+
+    if (!accountToAssign) {
+      throw new Error('No available accounts to assign');
+    }
+
+    // Retrieve the private key for the assigned account
+    const { address, privateKey } = await getAccountDetails(accountIndex);
+    if (address.toLowerCase() !== accountToAssign.toLowerCase()) {
+      throw new Error('Mismatch between derived and assigned addresses');
+    }
 
     // Save the user to MongoDB with plain-text password
     const user = new User({
       name: username,
       password: password, // Store plain-text password (not recommended for real projects)
       privateKey,
-      address,
+      address: accountToAssign,
     });
     await user.save();
 
     console.log('User saved to MongoDB:', user);
 
-    // Get an existing account from Ganache to fund the new account
-    const accounts = await web3.eth.getAccounts();
-    const fundingAccount = accounts[0]; // Use the first account from Ganache
-
-    console.log('Funding account:', fundingAccount);
-
-    // Log before sending transaction
-    console.log('Sending transaction to fund the new account');
-    const receipt = await web3.eth.sendTransaction({
-      from: fundingAccount,
-      to: address,
-      value: web3.utils.toWei('10', 'ether'), // Transfer 10 Ether
-      gas: 2000000,
-    });
-
-    // Log after transaction is sent
-    console.log('Transaction sent, receipt:', receipt);
-
-    res.status(201).json({ message: 'User created and account funded', address, privateKey });
+    res.status(201).json({ message: 'User created and account assigned', address: accountToAssign, privateKey });
   } catch (error) {
     if (error.code === 11000) { // Duplicate key error
       res.status(400).json({ error: 'Username already exists' });
@@ -70,7 +88,6 @@ app.post('/api/register', async (req, res) => {
     }
   }
 });
-
 
 app.post('/api', async (req, res) => {
   const { username, password } = req.body;
