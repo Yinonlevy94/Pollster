@@ -1,9 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const Web3 = require('web3');
+const {Web3} = require('web3');
 const Wallet = require('ethereumjs-wallet').default;
-const { default: hdkey } = require('ethereumjs-wallet/hdkey');
+const { hdkey } = require('ethereumjs-wallet'); // Corrected import statement
 const bip39 = require('bip39');
 
 const app = express();
@@ -19,12 +19,12 @@ mongoose.connect('mongodb+srv://shaiYinon:shaiYinon@pollster.rmi7ajf.mongodb.net
   .catch(err => console.log(err));
 
 // Correct initialization of Web3 with HTTP provider
-const web3 = new Web3('http://127.0.0.1:7545'); // Ensure Ganache is running on port 7545
+const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545')); // Ensure Ganache is running on port 7545
 
-// Your mnemonic phrase from Ganache (replace this with your actual mnemonic phrase)
-const mnemonic = 'trend poverty aunt scissors traffic couple possible burst found excuse uphold bless';
+const mnemonic = 'ridge smile flower slender board public humble fold verify pill grid will';
 
-const hdwallet = hdkey.fromMasterSeed(bip39.mnemonicToSeedSync(mnemonic));
+const seed = bip39.mnemonicToSeedSync(mnemonic);
+const hdwallet = hdkey.fromMasterSeed(seed);
 const path = "m/44'/60'/0'/0/";
 
 // Keep track of assigned accounts
