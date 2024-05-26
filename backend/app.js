@@ -1,9 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const {Web3} = require('web3');
+const { Web3 } = require('web3');
 const Wallet = require('ethereumjs-wallet').default;
-const { hdkey } = require('ethereumjs-wallet'); // Corrected import statement
+const { hdkey } = require('ethereumjs-wallet');
 const bip39 = require('bip39');
 
 const app = express();
@@ -12,14 +12,13 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const User = require('./models/User'); // Import User model
+const User = require('./models/User');
 
 mongoose.connect('mongodb+srv://shaiYinon:shaiYinon@pollster.rmi7ajf.mongodb.net/')
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
-// Correct initialization of Web3 with HTTP provider
-const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545')); // Ensure Ganache is running on port 7545
+const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
 
 const mnemonic = 'ridge smile flower slender board public humble fold verify pill grid will';
 
@@ -27,7 +26,6 @@ const seed = bip39.mnemonicToSeedSync(mnemonic);
 const hdwallet = hdkey.fromMasterSeed(seed);
 const path = "m/44'/60'/0'/0/";
 
-// Keep track of assigned accounts
 let assignedAccounts = {};
 
 async function getAccountDetails(index) {
@@ -38,39 +36,43 @@ async function getAccountDetails(index) {
   };
 }
 
+async function findNextAvailableAccount() {
+  const accounts = await web3.eth.getAccounts();
+  let accountToAssign, accountIndex;
+
+  for (let i = 0; i < accounts.length; i++) {
+    const existingUser = await User.findOne({ address: accounts[i] });
+    if (!assignedAccounts[accounts[i]] && !existingUser) {
+      accountToAssign = accounts[i];
+      accountIndex = i;
+      break;
+    }
+  }
+
+  if (!accountToAssign) {
+    throw new Error('No available accounts to assign');
+  }
+
+  const { address, privateKey } = await getAccountDetails(accountIndex);
+  if (address.toLowerCase() !== accountToAssign.toLowerCase()) {
+    throw new Error('Mismatch between derived and assigned addresses');
+  }
+
+  return { accountToAssign, privateKey };
+}
+
 app.post('/api/register', async (req, res) => {
   try {
     const { username, password } = req.body;
 
     console.log('Registering user:', { username, password });
 
-    // Get an existing account from Ganache that hasn't been used yet
-    const accounts = await web3.eth.getAccounts();
-    let accountToAssign, accountIndex;
+    const { accountToAssign, privateKey } = await findNextAvailableAccount();
+    assignedAccounts[accountToAssign] = true;
 
-    for (let i = 0; i < accounts.length; i++) {
-      if (!assignedAccounts[accounts[i]]) {
-        accountToAssign = accounts[i];
-        accountIndex = i;
-        assignedAccounts[accounts[i]] = true; // Mark this account as used
-        break;
-      }
-    }
-
-    if (!accountToAssign) {
-      throw new Error('No available accounts to assign');
-    }
-
-    // Retrieve the private key for the assigned account
-    const { address, privateKey } = await getAccountDetails(accountIndex);
-    if (address.toLowerCase() !== accountToAssign.toLowerCase()) {
-      throw new Error('Mismatch between derived and assigned addresses');
-    }
-
-    // Save the user to MongoDB with plain-text password
     const user = new User({
       name: username,
-      password: password, // Store plain-text password (not recommended for real projects)
+      password: password,
       privateKey,
       address: accountToAssign,
     });
@@ -80,7 +82,7 @@ app.post('/api/register', async (req, res) => {
 
     res.status(201).json({ message: 'User created and account assigned', address: accountToAssign, privateKey });
   } catch (error) {
-    if (error.code === 11000) { // Duplicate key error
+    if (error.code === 11000) {
       res.status(400).json({ error: 'Username already exists' });
     } else {
       console.error('Error creating user:', error);
@@ -92,7 +94,7 @@ app.post('/api/register', async (req, res) => {
 app.post('/api', async (req, res) => {
   const { username, password } = req.body;
   console.log(`Login attempt for user: ${username}`);
-  
+
   try {
     const user = await User.findOne({ name: username });
     if (!user) {
@@ -102,7 +104,6 @@ app.post('/api', async (req, res) => {
 
     console.log('User found:', user);
 
-    // Directly compare plain-text passwords
     if (password !== user.password) {
       console.log('Invalid password for user:', username);
       return res.status(401).json({ error: 'Invalid password' });
