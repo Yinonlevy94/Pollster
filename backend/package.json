@@ -10,8 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bip39": "^3.1.0",
     "cors": "^2.8.5",
+    "ethereum-wallet": "^0.0.6",
+    "ethereumjs-wallet": "^1.0.2",
     "express": "^4.19.2",
-    "mongoose": "^8.3.3"
+    "mongoose": "^8.3.3",
+    "web3": "^4.8.0"
   }
 }
