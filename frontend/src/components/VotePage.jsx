@@ -39,7 +39,7 @@ function VotePage() {
                 console.log('Vote registered:', response.data);
                 setShowModal(false); 
                 setConfirmationChecked(false); 
-                navigate('/thankyou'); // Ensure this matches the route in App.js
+                navigate('/thankyou'); 
             } catch (error) {
                 console.error('Error submitting vote:', error);
             }
