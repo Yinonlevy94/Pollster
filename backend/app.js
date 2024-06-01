@@ -111,11 +111,15 @@ app.post('/api', async (req, res) => {
 
     console.log('Password valid for user:', username);
 
-    res.status(200).json({ message: 'Login successful', redirectUrl: '/api/vote' });
+    res.status(200).json({ message: 'Login successful', redirectUrl: 'api/vote' });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
+app.post('/api/votepage', (req,res) =>{
+  console.log(req.body);
+  res.status(200).json({ message: 'Vote recieved' });
+})
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

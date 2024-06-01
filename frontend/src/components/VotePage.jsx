@@ -16,14 +16,14 @@ function VotePage() {
     const handleVoteClick = candidate => {
         setSelectedCandidate(candidate);
         setShowModal(true);
-        setConfirmationChecked(false); // Reset checkbox state each time the modal opens
+        setConfirmationChecked(false); 
     };
 
     const handleVote = async () => {
         if (confirmationChecked && selectedCandidate) {
             try {
                 const response = await axios.post('http://localhost:5000/api/votepage', {
-                    username: 'your-username', // Replace with the actual username
+                    username: 'your-username', 
                     vote: selectedCandidate.name
                 });
                 console.log('Vote registered:', response.data);
