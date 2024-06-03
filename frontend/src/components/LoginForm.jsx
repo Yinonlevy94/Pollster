@@ -22,7 +22,6 @@ function LoginForm() {
             });
 
             if (response.status === 200 && response.data.redirectUrl) {
-                localStorage.setItem('username', response.data.username); // Store username in localStorage
                 console.log(response.data.redirectUrl);
                 navigate(response.data.redirectUrl);
             } else {
@@ -85,7 +84,7 @@ function LoginForm() {
                     <MdOutlinePassword />
                 </div>
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
-                <button type="submit">{isSignUp ? 'Sign Up' : 'Login'}</button>
+                <button type="submit" onClick={isSignUp ? handleSignUp : handleLogin}>{isSignUp ? 'Sign Up' : 'Login'}</button>
                 <div className="toggle-link" onClick={() => setIsSignUp(!isSignUp)}>
                     {isSignUp ? 'Already have an account? Log in' : "Don't have an account? Sign up"}
                 </div>
