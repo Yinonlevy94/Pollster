@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './VotePage.css'; 
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const candidates = [
     { id: 1, name: "Benny Gantz", description: "Lorem ipsum dolor...", imgSrc: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Benny_Gantz_2019_%28cropped%29.jpg/220px-Benny_Gantz_2019_%28cropped%29.jpg" },
@@ -12,23 +13,33 @@ function VotePage() {
     const [showModal, setShowModal] = useState(false);
     const [selectedCandidate, setSelectedCandidate] = useState(null);
     const [confirmationChecked, setConfirmationChecked] = useState(false);
+    const [username, setUsername] = useState('');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const storedUsername = localStorage.getItem('username');
+        if (storedUsername) {
+            setUsername(storedUsername);
+        }
+    }, []);
 
     const handleVoteClick = candidate => {
         setSelectedCandidate(candidate);
         setShowModal(true);
-        setConfirmationChecked(false); // Reset checkbox state each time the modal opens
+        setConfirmationChecked(false);
     };
 
     const handleVote = async () => {
         if (confirmationChecked && selectedCandidate) {
             try {
                 const response = await axios.post('http://localhost:5000/api/votepage', {
-                    username: 'your-username', // Replace with the actual username
+                    username: username,
                     vote: selectedCandidate.name
                 });
                 console.log('Vote registered:', response.data);
-                setShowModal(false); // Close the modal on successful vote
-                setConfirmationChecked(false); // Reset checkbox state
+                setShowModal(false); 
+                setConfirmationChecked(false); 
+                navigate('/thankyou'); 
             } catch (error) {
                 console.error('Error submitting vote:', error);
             }
@@ -41,7 +52,7 @@ function VotePage() {
         <div className="vote-container">
             {candidates.map(candidate => (
                 <button key={candidate.id} className="candidate" onClick={() => handleVoteClick(candidate)}>
-                    <img src={candidate.imgSrc} alt={`Picture of ${candidate.name}`} />
+                    <img src={candidate.imgSrc} alt={candidate.name} />
                     <h3>{candidate.name}</h3>
                     <p>{candidate.description}</p>
                 </button>
