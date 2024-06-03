@@ -100,7 +100,7 @@ app.post('/api', async (req, res) => {
     const user = await User.findOne({ name: username });
     if (!user) {
       console.log('User not found:', username);
-      return res.status(404).json({ error: 'User does not exist' });
+      return res.status(400).json({ error: 'User does not exist' });
     }
 
     console.log('User found:', user);
@@ -132,7 +132,7 @@ app.post('/api/votepage', async (req, res) => {
   try {
     const user = await User.findOne({ name: username });
     if (!user) {
-      return res.status(404).json({ error: 'User does not exist' });
+      return res.status(400).json({ error: 'User does not exist' });
     }
 
     // Ensure the user has not voted yet

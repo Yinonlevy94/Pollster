@@ -18,6 +18,7 @@ function VotePage() {
 
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
+      
         if (storedUsername) {
             setUsername(storedUsername);
         }
@@ -30,6 +31,7 @@ function VotePage() {
     };
 
     const handleVote = async () => {
+        
         if (confirmationChecked && selectedCandidate) {
             try {
                 const response = await axios.post('http://localhost:5000/api/votepage', {
