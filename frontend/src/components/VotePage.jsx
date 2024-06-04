@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './VotePage.css'; 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const candidates = [
     { id: 1, name: "Benny Gantz", description: "Lorem ipsum dolor...", imgSrc: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Benny_Gantz_2019_%28cropped%29.jpg/220px-Benny_Gantz_2019_%28cropped%29.jpg" },
@@ -13,16 +14,12 @@ function VotePage() {
     const [showModal, setShowModal] = useState(false);
     const [selectedCandidate, setSelectedCandidate] = useState(null);
     const [confirmationChecked, setConfirmationChecked] = useState(false);
-    const [username, setUsername] = useState('');
     const navigate = useNavigate();
+    const username = useSelector((state) => state.username);
 
-    useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-      
-        if (storedUsername) {
-            setUsername(storedUsername);
-        }
-    }, []);
+    // useEffect(() => {
+    //     alert(`Retrieved username: ${username}`);
+    // }, [username]);
 
     const handleVoteClick = candidate => {
         setSelectedCandidate(candidate);
@@ -31,7 +28,6 @@ function VotePage() {
     };
 
     const handleVote = async () => {
-        
         if (confirmationChecked && selectedCandidate) {
             try {
                 const response = await axios.post('http://localhost:5000/api/votepage', {
