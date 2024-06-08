@@ -5,7 +5,7 @@ import { MdOutlinePassword } from "react-icons/md";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setUsername as setReduxUsername } from '../actions'; // Ensure the correct path to your actions file
+import { setUsername as setReduxUsername } from '../actions'; 
 
 function LoginForm() {
     const [username, setUsername] = useState('');
@@ -26,8 +26,8 @@ function LoginForm() {
 
             if (response.status === 200 && response.data.redirectUrl) {
                 console.log(response.data.redirectUrl);
-                localStorage.setItem('username', username); // Optionally store in localStorage
-                dispatch(setReduxUsername(username)); // Dispatch the setUsername action
+                localStorage.setItem('username', username); 
+                dispatch(setReduxUsername(username)); 
                 navigate(response.data.redirectUrl);
             } else {
                 console.log(response.data);
