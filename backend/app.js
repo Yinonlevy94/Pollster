@@ -131,6 +131,7 @@ app.post('/api/votepage', async (req, res) => {
 
   try {
     const user = await User.findOne({ name: username });
+    console.log(user);
     if (!user) {
       return res.status(400).json({ error: 'User does not exist' });
     }
