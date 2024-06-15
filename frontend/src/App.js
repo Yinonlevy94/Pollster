@@ -1,21 +1,21 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import LoginForm from './components/LoginForm'; 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginForm from './components/LoginForm';
 import VotePage from './components/VotePage';
-import ThankYouPage from './components/Thankyou'; // Adjusted to match Thankyou.jsx
-import './App.css';
+import ThankYouPage from './components/ThankYou'; 
+import AlreadyVoted from './components/AlreadyVoted';
 
-const App = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginForm />} />
-        <Route path="/login" element={<LoginForm />} /> 
-        <Route path="api/vote" element={<VotePage />} />
-        <Route path="/thankyou" element={<ThankYouPage />} />
-      </Routes>
-    </BrowserRouter>
-  );
-};
+function App() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<LoginForm />} />
+                <Route path="/vote" element={<VotePage />} />
+                <Route path="/thankyou" element={<ThankYouPage />} />
+                <Route path="/alreadyvoted" element={<AlreadyVoted />} />
+            </Routes>
+        </Router>
+    );
+}
 
 export default App;

@@ -14,6 +14,18 @@ app.use(express.json());
 
 const User = require('./models/User');
 
+const governmentDBConnection = mongoose.createConnection('mongodb+srv://shaiyinonnaor:Z1QNFVMxZpfERxV4@governmentaldb.laueuty.mongodb.net/', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+const GovernmentUser = governmentDBConnection.model('GovernmentUser', new mongoose.Schema({
+  name: String,
+  lastName: String,
+  id: String,
+  isAssigned: Boolean
+}));
+
 mongoose.connect('mongodb+srv://shaiYinon:shaiYinon@pollster.rmi7ajf.mongodb.net/')
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
@@ -63,9 +75,19 @@ async function findNextAvailableAccount() {
 
 app.post('/api/register', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, id } = req.body;
 
-    console.log('Registering user:', { username, password });
+    console.log('Registering user:', { username, password, id });
+
+    const govUser = await GovernmentUser.findOne({ id: id });
+
+    if (!govUser) {
+      return res.status(400).json({ error: 'ID not found in government database' });
+    }
+
+    if (govUser.isAssigned) {
+      return res.status(400).json({ error: 'A user already exists for this ID.' });
+    }
 
     const { accountToAssign, privateKey } = await findNextAvailableAccount();
     assignedAccounts[accountToAssign] = true;
@@ -78,6 +100,9 @@ app.post('/api/register', async (req, res) => {
       hasVoted: false // Ensure hasVoted field is set to false initially
     });
     await user.save();
+
+    govUser.isAssigned = true;
+    await govUser.save();
 
     console.log('User saved to MongoDB:', user);
 
@@ -110,15 +135,20 @@ app.post('/api', async (req, res) => {
       return res.status(401).json({ error: 'Invalid password' });
     }
 
+    if (user.hasVoted) {
+      console.log('User has already voted:', username);
+      return res.status(200).json({ message: 'Already voted', redirectUrl: '/alreadyvoted' });
+    }
+
     console.log('Password valid for user:', username);
 
-    // Correct redirect URL to /api/vote
     res.status(200).json({ message: 'Login successful', redirectUrl: '/api/vote', username: user.name });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ error: error.message });
   }
 });
+
 
 const candidateAddresses = {
   "Benny Gantz": "0xE39D1B37d13b696100BB1c4F3AB11486D6A25229",
@@ -136,7 +166,6 @@ app.post('/api/votepage', async (req, res) => {
       return res.status(400).json({ error: 'User does not exist' });
     }
 
-    // Ensure the user has not voted yet
     if (user.hasVoted) {
       return res.status(403).json({ error: 'User has already voted' });
     }
@@ -149,20 +178,19 @@ app.post('/api/votepage', async (req, res) => {
       return res.status(400).json({ error: 'Invalid candidate selected' });
     }
 
-    const gasPrice = web3.utils.toWei('1', 'gwei'); // Set gas price higher than the base fee (875 Gwei)
+    const gasPrice = web3.utils.toWei('1', 'gwei'); 
     const transaction = {
       from: fromAddress,
       to: toAddress,
       value: web3.utils.toWei('1', 'ether'),
-      gas: '21000', // Minimal gas limit for a simple transaction
-      gasPrice: gasPrice // Ensure gas price is reasonable
+      gas: '21000', 
+      gasPrice: gasPrice 
     };
 
     const signedTransaction = await web3.eth.accounts.signTransaction(transaction, privateKey);
 
     const receipt = await web3.eth.sendSignedTransaction(signedTransaction.rawTransaction);
 
-    // Mark the user as having voted
     user.hasVoted = true;
     await user.save();
 
@@ -172,6 +200,5 @@ app.post('/api/votepage', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

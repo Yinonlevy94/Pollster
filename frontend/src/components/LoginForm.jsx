@@ -10,6 +10,7 @@ import { setUsername as setReduxUsername } from '../actions';
 function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [id, setId] = useState(''); // Add state for ID
     const [errorMessage, setErrorMessage] = useState('');
     const [isSignUp, setIsSignUp] = useState(false);
     const navigate = useNavigate();
@@ -49,7 +50,8 @@ function LoginForm() {
         try {
             const response = await axios.post("http://localhost:5000/api/register", {
                 username: username,
-                password: password
+                password: password,
+                id: id // Include ID in the registration request
             });
 
             if (response.status === 201) {
@@ -59,8 +61,12 @@ function LoginForm() {
                 console.log(response.data);
             }
         } catch (e) {
-            console.log("error", e);
-            setErrorMessage('An error occurred. Please try again.');
+            if (e.response && e.response.status === 400 && e.response.data.error === 'A user already exists for this ID.') {
+                setErrorMessage('A user already exists for this ID.');
+            } else {
+                console.log("error", e);
+                setErrorMessage('An error occurred. Please try again.');
+            }
         }
     };
 
@@ -88,6 +94,17 @@ function LoginForm() {
                     />
                     <MdOutlinePassword />
                 </div>
+                {isSignUp && (
+                    <div className="inputbox">
+                        <input
+                            type="text"
+                            placeholder='ID'
+                            required
+                            value={id}
+                            onChange={e => setId(e.target.value)}
+                        />
+                    </div>
+                )}
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
                 <button type="submit">{isSignUp ? 'Sign Up' : 'Login'}</button>
                 <div className="toggle-link" onClick={() => setIsSignUp(!isSignUp)}>
