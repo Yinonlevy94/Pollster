@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const readline = require('readline');
 
-// Define the schema for the governmental user
 const governmentUserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -22,22 +21,17 @@ const governmentUserSchema = new mongoose.Schema({
   }
 });
 
-// Create the model for the governmental user
 const GovernmentUser = mongoose.model('GovernmentUser', governmentUserSchema);
 
-// Function to register a new governmental user
 async function registerGovernmentUser(name, lastName, id) {
-  // Connect to the MongoDB database
   await mongoose.connect('mongodb+srv://shaiyinonnaor:Z1QNFVMxZpfERxV4@governmentaldb.laueuty.mongodb.net/', {
     useNewUrlParser: true,
     useUnifiedTopology: true
   });
 
   try {
-    // Create a new governmental user
     const newUser = new GovernmentUser({ name, lastName, id });
 
-    // Save the new user to the database
     await newUser.save();
 
     console.log('User registered successfully:', newUser);
@@ -48,12 +42,10 @@ async function registerGovernmentUser(name, lastName, id) {
       console.error('Error registering user:', error);
     }
   } finally {
-    // Close the connection to the database
     await mongoose.connection.close();
   }
 }
 
-// Function to ask for user input
 function askQuestion(query) {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -66,13 +58,11 @@ function askQuestion(query) {
   }));
 }
 
-// Function to validate ID
 function validateId(id) {
   const idPattern = /^\d{9}$/;
   return idPattern.test(id);
 }
 
-// Main function to prompt user for details and register the user
 async function main() {
   const name = await askQuestion('Enter name: ');
   const lastName = await askQuestion('Enter last name: ');
