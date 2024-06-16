@@ -1,0 +1,64 @@
+.already-voted-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #72EDF2 10%, #5151E5 100%);
+  font-family: 'Arial', sans-serif;
+  color: #fff;
+}
+
+.already-voted-content {
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 90%;
+}
+
+.already-voted-content h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+.already-voted-content p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
+
+.already-voted-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkmark {
+  width: 80px;
+  height: 80px;
+  stroke: #ff4b4b;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.checkmark-circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.checkmark-check {
+  stroke-dasharray: 36;
+  stroke-dashoffset: 36;
+  transition: stroke-dashoffset 0.3s ease 0.3s;
+}
+
+.already-voted-container:hover .checkmark-circle {
+  stroke-dashoffset: 0;
+}
+
+.already-voted-container:hover .checkmark-check {
+  stroke-dashoffset: 0;
+}

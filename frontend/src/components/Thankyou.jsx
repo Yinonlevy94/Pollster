@@ -1,5 +1,5 @@
 import React from 'react';
-import './Thankyou.css';
+import './ThankYou.css';
 
 function ThankYouPage() {
     return (
