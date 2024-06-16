@@ -1,0 +1,73 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Election Results</title>
+          <style>
+            body {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              background: linear-gradient(135deg, #72EDF2 10%, #5151E5 100%);
+              font-family: Arial, sans-serif;
+              margin: 0;
+            }
+            .results-container {
+              text-align: center;
+              background: rgba(0, 0, 0, 0.6);
+              padding: 40px;
+              border-radius: 10px;
+              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+              color: #fff;
+              animation: fadeIn 1s ease-in-out;
+            }
+            .results-container img {
+              width: 150px;
+              border-radius: 50%;
+              animation: bounceIn 1s ease;
+            }
+            .results-container h1 {
+              font-size: 2.5em;
+              margin: 20px 0;
+            }
+            .results-container p {
+              font-size: 1.2em;
+              margin: 10px 0;
+            }
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            @keyframes bounceIn {
+              from { transform: scale(0.5); opacity: 0; }
+              to { transform: scale(1); opacity: 1; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="results-container">
+            <h1>Election Results</h1>
+            <div>
+              <h2>Winner</h2>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Benny_Gantz_2019_%28cropped%29.jpg/220px-Benny_Gantz_2019_%28cropped%29.jpg" alt="Benny Gantz">
+              <h1>Congratulations, Benny Gantz!</h1>
+              <p>You have won the election with 26 votes (37.14%) and 45 mandates.</p>
+            </div>
+            <div>
+              <h2>Second Place</h2>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Benjamin_Netanyahu%2C_February_2023.jpg/220px-Benjamin_Netanyahu_February_2023.jpg" alt="Bibi Netanyahu">
+              <p>Bibi Netanyahu received 24 votes (34.29%) and 41 mandates.</p>
+            </div>
+            <div>
+              <h2>Third Place</h2>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Naftali_Bennett_official_portrait.jpg/220px-Naftali_Bennett_official_portrait.jpg" alt="Naftali Bennet">
+              <p>Naftali Bennet received 20 votes (28.57%) and 34 mandates.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      
