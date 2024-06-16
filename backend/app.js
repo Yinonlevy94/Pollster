@@ -142,12 +142,13 @@ app.post('/api', async (req, res) => {
 
     console.log('Password valid for user:', username);
 
-    res.status(200).json({ message: 'Login successful', redirectUrl: '/api/vote', username: user.name });
+    res.status(200).json({ message: 'Login successful', redirectUrl: '/vote', username: user.name });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ error: error.message });
   }
 });
+
 
 
 const candidateAddresses = {
