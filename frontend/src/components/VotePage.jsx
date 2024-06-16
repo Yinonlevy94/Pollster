@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const candidates = [
-    { id: 1, name: "Benny Gantz", description: "Lorem ipsum dolor...", imgSrc: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Benny_Gantz_2019_%28cropped%29.jpg/220px-Benny_Gantz_2019_%28cropped%29.jpg" },
-    { id: 2, name: "Bibi Netanyahu", description: "Lorem ipsum dolor...", imgSrc: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Benjamin_Netanyahu%2C_February_2023.jpg/220px-Benjamin_Netanyahu%2C_February_2023.jpg" },
-    { id: 3, name: "Naftali Bennet", description: "Lorem ipsum dolor...", imgSrc: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Naftali_Bennett_official_portrait.jpg/220px-Naftali_Bennett_official_portrait.jpg" }
+    { id: 1, name: "Benny Gantz", description: "Benny Gantz, leader of the Blue and White party and former IDF Chief of Staff, emphasizes strong defense, pragmatic diplomacy, economic stability, and social equity. He aims to revive the peace process while ensuring Israel's security and addressing societal disparities.", imgSrc: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Benny_Gantz_2019_%28cropped%29.jpg/220px-Benny_Gantz_2019_%28cropped%29.jpg" },
+    { id: 2, name: "Bibi Netanyahu", description: "Benjamin Netanyahu, leader of the Likud party, is Israel's longest-serving Prime Minister. He focuses on strong national security, free-market economics, and close US-Israel ties, with a cautious approach to the Israeli-Palestinian peace process.", imgSrc: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Benjamin_Netanyahu%2C_February_2023.jpg/220px-Benjamin_Netanyahu%2C_February_2023.jpg" },
+    { id: 3, name: "Naftali Bennet", description: "Naftali Bennett, leader of the New Right party and former Prime Minister, is a tech entrepreneur and ex-elite soldier. He advocates for tough security, free-market policies, education reform, and expanding West Bank settlements.", imgSrc: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Naftali_Bennett_official_portrait.jpg/220px-Naftali_Bennett_official_portrait.jpg" }
 ];
 
 function VotePage() {
@@ -17,9 +17,6 @@ function VotePage() {
     const navigate = useNavigate();
     const username = useSelector((state) => state.username);
 
-    // useEffect(() => {
-    //     alert(`Retrieved username: ${username}`);
-    // }, [username]);
 
     const handleVoteClick = candidate => {
         setSelectedCandidate(candidate);
