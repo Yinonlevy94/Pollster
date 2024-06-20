@@ -2,8 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
 import VotePage from './components/VotePage';
-import ThankYouPage from './components/Thankyou';
+import ThankYouPage from './components/ThankYou';
 import AlreadyVoted from './components/AlreadyVoted';
+import Results from './components/Results';
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                 <Route path="/vote" element={<VotePage />} />
                 <Route path="/thankyou" element={<ThankYouPage />} />
                 <Route path="/alreadyvoted" element={<AlreadyVoted />} />
+                <Route path="/results" element={<Results />} />
             </Routes>
         </Router>
     );

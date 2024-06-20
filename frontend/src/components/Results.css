@@ -1,0 +1,141 @@
+body {
+  background: linear-gradient(135deg, #72EDF2 10%, #5151E5 100%);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.results-container {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  animation: fadeIn 1s ease-in-out;
+  text-align: center;
+  width: 90%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.results-container h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  animation: slideInDown 1s ease;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  width: 100%;
+  animation: fadeInUp 1s ease;
+}
+
+.result h2 {
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  animation: fadeInRight 1s ease;
+}
+
+.result img {
+  width: 150px;
+  border-radius: 50%;
+  animation: bounceIn 1s ease;
+  margin-bottom: 10px;
+}
+
+.result p {
+  font-size: 1.2em;
+  margin: 10px 0;
+  animation: fadeInLeft 1s ease;
+}
+
+.loading {
+  font-size: 2em;
+  color: #fff;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.second-place {
+  margin-top: 20px;
+}
+
+.third-place {
+  margin-top: 40px;
+}
