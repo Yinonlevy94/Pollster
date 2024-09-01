@@ -34,7 +34,7 @@ function VotePage() {
                 console.log('Vote registered:', response.data);
                 setShowModal(false); 
                 setConfirmationChecked(false); 
-                navigate('/thankyou'); 
+                navigate('/Thankyou'); 
             } catch (error) {
                 console.error('Error submitting vote:', error);
             }

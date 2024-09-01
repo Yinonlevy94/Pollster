@@ -10,12 +10,13 @@ import { setUsername as setReduxUsername } from '../actions';
 function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [id, setId] = useState(''); // Add state for ID
+    const [id, setId] = useState(''); 
     const [errorMessage, setErrorMessage] = useState('');
     const [isSignUp, setIsSignUp] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    
     const handleLogin = async (event) => {
         event.preventDefault();
         try {
@@ -23,12 +24,14 @@ function LoginForm() {
             const response = await axios.post("http://localhost:5000/api", {
                 username: username,
                 password: password
-            });
+            });//send username and password to the server
 
             if (response.status === 200 && response.data.redirectUrl) {
-                console.log(response.data.redirectUrl);
-                localStorage.setItem('username', username); 
-                dispatch(setReduxUsername(username)); 
+                console.log(response.data.redirectUrl); //redirect to the voting page
+
+                //localStorage.setItem('username', username); //storing the username
+
+                dispatch(setReduxUsername(username)); //saving the username so we can vote
                 navigate(response.data.redirectUrl);
             } else {
                 console.log(response.data);
@@ -51,7 +54,7 @@ function LoginForm() {
             const response = await axios.post("http://localhost:5000/api/register", {
                 username: username,
                 password: password,
-                id: id // Include ID in the registration request
+                id: id // sends the cardentials to the server for registration
             });
 
             if (response.status === 201) {

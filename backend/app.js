@@ -16,41 +16,45 @@ app.use(express.json());
 
 const User = require('./models/User');
 
+//First DB variable
 const governmentDBConnection = mongoose.createConnection('mongodb+srv://shaiyinonnaor:Z1QNFVMxZpfERxV4@governmentaldb.laueuty.mongodb.net/', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
 
+//Government DB Scheme 
 const GovernmentUser = governmentDBConnection.model('GovernmentUser', new mongoose.Schema({
   name: String,
   lastName: String,
   id: String,
   isAssigned: Boolean
 }));
-
+//Second DB variable
 mongoose.connect('mongodb+srv://shaiYinon:shaiYinon@pollster.rmi7ajf.mongodb.net/')
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
+  //Ganache connection
 const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
 
 const mnemonic = 'ridge smile flower slender board public humble fold verify pill grid will';
-
 const seed = bip39.mnemonicToSeedSync(mnemonic);
 const hdwallet = hdkey.fromMasterSeed(seed);
 const hdPath = "m/44'/60'/0'/0/";
 
 let assignedAccounts = {};
 
+//fetch the wallet keys
 async function getAccountDetails(index) {
-  const wallet = hdwallet.derivePath(hdPath + index).getWallet();
+  const wallet = hdwallet.derivePath(hdPath + index).getWallet(); 
   return {
     address: '0x' + wallet.getAddress().toString('hex'),
     privateKey: '0x' + wallet.getPrivateKey().toString('hex')
   };
 }
 
-async function findNextAvailableAccount() {
+//finding the next available wallet and calling the fetch function
+async function findNextAvailableAccount() { 
   const accounts = await web3.eth.getAccounts();
   let accountToAssign, accountIndex;
 
@@ -66,7 +70,7 @@ async function findNextAvailableAccount() {
   if (!accountToAssign) {
     throw new Error('No available accounts to assign');
   }
-
+  //checks if the wallet is assigned correctly
   const { address, privateKey } = await getAccountDetails(accountIndex);
   if (address.toLowerCase() !== accountToAssign.toLowerCase()) {
     throw new Error('Mismatch between derived and assigned addresses');
@@ -79,10 +83,11 @@ app.post('/api/register', async (req, res) => {
   try {
     const { username, password, id } = req.body;
 
-    console.log('Registering user:', { username, password, id });
-
+    //console.log('Registering user:', { username, password, id });
+    //search the user in the gov DB via the id so we can assign a govermental user to the platform`s user
     const govUser = await GovernmentUser.findOne({ id: id });
 
+  
     if (!govUser) {
       return res.status(400).json({ error: 'ID not found in government database' });
     }
@@ -93,13 +98,13 @@ app.post('/api/register', async (req, res) => {
 
     const { accountToAssign, privateKey } = await findNextAvailableAccount();
     assignedAccounts[accountToAssign] = true;
-
+    //after the id validation we use this scheme to register the user into the second DB
     const user = new User({
       name: username,
       password: password,
       privateKey,
       address: accountToAssign,
-      hasVoted: false // Ensure hasVoted field is set to false initially
+      hasVoted: false 
     });
     await user.save();
 
@@ -178,7 +183,7 @@ app.post('/api/votepage', async (req, res) => {
     if (!toAddress) {
       return res.status(400).json({ error: 'Invalid candidate selected' });
     }
-
+    //we preform the transaction on behalf of the user
     const gasPrice = web3.utils.toWei('1', 'gwei'); 
     const transaction = {
       from: fromAddress,
@@ -220,7 +225,7 @@ app.get('/results', async (req, res) => {
   };
 
   const TOTAL_MANDATES = 120;
-
+  
   try {
     const balances = await Promise.all(Object.values(candidates).map(async (candidate) => {
       const balanceWei = await web3.eth.getBalance(candidate.address);

@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
 import VotePage from './components/VotePage';
-import ThankYouPage from './components/ThankYou';
+import ThankYouPage from './components/Thankyou';
 import AlreadyVoted from './components/AlreadyVoted';
 import Results from './components/Results';
 
